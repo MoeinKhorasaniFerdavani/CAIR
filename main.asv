@@ -1,7 +1,7 @@
 clc;
 clc;
 close all;
-I = im2double(imread("Images\dr_hosein_falsafein.jpg"));
+I = im2double(imread("Images\dr_nader_karimi.jpg"));
 figure,imshow(I);
 R = I(:,:,1);
 G = I(:,:,2);
@@ -22,8 +22,8 @@ K = I;
 for i =1:size(J,1)
     j = seam(i);
     K(i,j,1) = 1;
-    K(i,j,2) = 0;
-    K(i,j,3) = 0;
+    K(i,j,2)= 0;
+    K(i,j,3)=0;
 end
 figure,imshow(K);
 %functions
