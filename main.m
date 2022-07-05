@@ -1,7 +1,7 @@
 clc;
 clc;
 close all;
-I = im2double(imread("Images\dr_hosein_falsafein.jpg"));
+I = im2double(imread("Images\Pagodas_en_el_lago_Shanhu_guilin.jpg"));
 figure,imshow(I);
 R = I(:,:,1);
 G = I(:,:,2);
@@ -12,12 +12,15 @@ horizental_sobel=fspecial('sobel');
 h_gradian = imfilter(J,horizental_sobel);
 vertical_sobel=fspecial('sobel').';
 v_gradian = imfilter(J,vertical_sobel);
-gradian = abs(h_gradian)+abs(v_gradian);
+gradian = sqrt((h_gradian).^2+(v_gradian).^2);
 %normalize gradian
 max_gradian = max(max(gradian));
 gradian = gradian/max_gradian;
 figure,imshow(gradian);
+figure,imshow(gradian);
+for n=1:round(.5 * size(R,2))
 seam = getVerticalSeam(J,gradian);
+
 K = I;
 for i =1:size(J,1)
     j = seam(i);
@@ -25,10 +28,23 @@ for i =1:size(J,1)
     K(i,j,2) = 0;
     K(i,j,3) = 0;
 end
-figure,imshow(K);
+J = removeVerticalSeam(J,seam);
+gradian = removeVerticalSeam(gradian,seam);
+I = removeVerticalSeamTreeChannel(I,seam);
+
+imshow(K);
+
+disp(round(n/size(I,2)*100));
+
+pause(.01);
+
+end
+
+figure,imshow(I);
+
 %functions
 function columns = getVerticalSeam(I,E)
-M = zeros(size(I,1),size(I,2),"int32");%additional memory
+M = zeros(size(I,1),size(I,2),"double");%additional memory
 %intial condition of first row
 M(1,:) = E(1,:);
 %recursive 
@@ -56,7 +72,8 @@ if M(size(I,1),j) < min_value
     min_value = M(size(I,1),j);
     min_j = j;
 end
-columns = zeros (size(I,1),1,'int8');
+%disp(strcat('min_j ',num2str(min_j)));
+columns = zeros (size(I,1),1,'uint16');
 columns(size(I,1)) = min_j;
 for k=0:size(I,1)-2
     i = size(I,1) - k;
@@ -80,5 +97,25 @@ for k=0:size(I,1)-2
     end
 end
 end
-b =2;
+
+end
+
+function J = removeVerticalSeam(I,columns)
+J = zeros(size(I,1),size(I,2) - 1,'double');
+for i=1:size(I)
+    %befor remove
+    J(i,1:columns(i) - 1) = I(i,1:columns(i) - 1);
+    J(i,columns(i):(size(I,2) - 1)) = I(i,(columns(i) + 1): size(I,2));
+end
+
+end
+
+function J = removeVerticalSeamTreeChannel(I,columns)
+R = I(:,:,1);
+G = I(:,:,2);
+B = I(:,:,3);
+R = removeVerticalSeam(R,columns);
+G = removeVerticalSeam(G,columns);
+B = removeVerticalSeam(B,columns);
+J = cat(3,R,G,B);
 end
