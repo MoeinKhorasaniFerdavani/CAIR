@@ -17,7 +17,6 @@ sum_variance = gradient_variance + saliency_variance + depth_variance;
 gradient_weight = (sum_variance - gradient_variance)^2;
 saliency_weight = (sum_variance - saliency_variance)^2;
 depth_weight = (sum_variance - depth_variance)^2;
-
 energy_map = gradient_weight*gradient_energy_map + saliency_weight*saliency_energy_map + depth_weight*depth_energy_map;
 max_of_energy_map = max(max(energy_map));
 energy_map = energy_map/max_of_energy_map;
