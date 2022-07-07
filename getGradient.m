@@ -1,5 +1,5 @@
 function gradient = getGradient(J)
-
+J = imfilter(J,fspecial('average',[3 3]));
 %calculate gradiant of image vertical and horizental
 horizental_sobel=fspecial('sobel');
 h_gradient = imfilter(J,horizental_sobel);
