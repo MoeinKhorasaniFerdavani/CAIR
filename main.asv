@@ -8,7 +8,7 @@ disp(f(3/4));
 disp(f(7/8));
 disp(f(15/16));
 disp(f(1));
-I = im2double(imread("Images\Dolls.png"));
+I = im2double(imread("Images\Baby.png"));
 figure,imshow(I);
 R = I(:,:,1);
 G = I(:,:,2);
@@ -24,22 +24,24 @@ gradian = sqrt((h_gradian).^2+(v_gradian).^2);
 max_gradian = max(max(gradian));
 eg = gradian/max_gradian;
 dg = getVareOfOtsu(eg);
-es = im2double(imread("Images\Dolls_SMap.png"));
+es = im2double(imread("Images\Baby_SMap.png"));
 ds = getVareOfOtsu(es);
-ed = im2double(imread("Images\Dolls_DMap.png"));
+ed = im2double(imread("Images\Baby_DMap.png"));
 dd = getVareOfOtsu(ed);
 d_sum = dg + ds + dd;
-dg = (sum - dg)^2;
-ds = (sum - ds)^2;
-de = (sum - de)^2;
+dg = (d_sum - dg)^2;
+ds = (d_sum - ds)^2;
+dd = (d_sum - dd)^2;
 gradian = dg*eg + ds*es + dd*ed;
+max_gradian = max(max(gradian));
+gradian = gradian/max_gradian;
 %disp(strcat('d:',num2str(getAvgDiffrenceOfOtsu(gradian))));
 %h = hist(gradian);
 plot(h);
 figure,imshow(gradian);
 figure,imshow(gradian);
 
-for n=1:round(.01 * size(R,2))
+for n=1:round(.5 * size(R,2))
     tic
 seam = getVerticalSeam(J,gradian);
 
@@ -50,8 +52,8 @@ for i =1:size(J,1)
     K(i,j,2) = 0;
     K(i,j,3) = 0;
 end
-J = removeVerticalSeam(J,seam);
-gradian = removeVerticalSeam(gradian,seam);
+J = removeVerticalSeam(J,seam,1);
+gradian = removeVerticalSeam(gradian,seam,1.2);
     
 I = removeVerticalSeamTreeChannel(I,seam);
 toc
@@ -124,12 +126,18 @@ end
 
 end
 
-function J = removeVerticalSeam(I,columns)
+function J = removeVerticalSeam(I,columns,k)
 J = zeros(size(I,1),size(I,2) - 1,'double');
 for i=1:size(I)
     %befor remove
     J(i,1:columns(i) - 1) = I(i,1:columns(i) - 1);
     J(i,columns(i):(size(I,2) - 1)) = I(i,(columns(i) + 1): size(I,2));
+    if(columns(i) > 1)
+        J(i,columns(i) - 1) = k * J(i,columns(i) - 1);
+    end
+    if(columns(i)<size(I,2))
+        J(i,columns(i)) = k * J(i,columns(i));
+    end
 end
 
 end
@@ -138,9 +146,9 @@ function J = removeVerticalSeamTreeChannel(I,columns)
 R = I(:,:,1);
 G = I(:,:,2);
 B = I(:,:,3);
-R = removeVerticalSeam(R,columns);
-G = removeVerticalSeam(G,columns);
-B = removeVerticalSeam(B,columns);
+R = removeVerticalSeam(R,columns,1);
+G = removeVerticalSeam(G,columns,1);
+B = removeVerticalSeam(B,columns,1);
 J = cat(3,R,G,B);
 end
 function J = f(I)
@@ -151,8 +159,8 @@ end
 function d = getVareOfOtsu(I)
 level = multithresh(I);
 bw = im2bw(I,level);
-figure,imshow(bw);
-imshow(bw);
+%figure,imshow(bw);
+%imshow(bw);
 K1 = [];
 K2 = [];
 for i=1:size(I,1)
