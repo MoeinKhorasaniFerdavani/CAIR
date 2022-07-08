@@ -1,2 +1,2 @@
 # CAIR
-Final Project of Computer Vision       Content aware image resizing 
+Final Project of Computer Vision       Content aware image retargeting
