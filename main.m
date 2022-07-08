@@ -1,26 +1,24 @@
 
 clc;
 close all;
-image_name = "Baby";
+image_name = "Diana";
 I = im2double(imread(strcat("Images\",image_name,".png")));
 
 figure,imshow(I);
 
-%create Gray image using this function instead of im2gray to have the same
-%weight for each chanel
 
-R = I(:,:,1);
-G = I(:,:,2);
-B = I(:,:,2);
-J = (R+G+B)/3;
+
+
+J = im2gray(I);
+
 figure,imshow(J);
 
 energy_map = getEnergyMap(J,image_name);
 
 figure,imshow(energy_map);
 figure,imshow(energy_map);
-
-for n=1:round(.3 * size(R,2))
+I_copy = I;
+for n=1:round(.3 * size(I_copy,2))
     
 seam = getVerticalSeam(J,energy_map);
 
@@ -38,7 +36,7 @@ I = removeVerticalSeamTreeChannel(I,seam);
 
 imshow(K);
 
-disp(strcat(num2str(round(n/size(R,2)*100)),"%    of total width is removed"));
+disp(strcat(num2str(round(n/size(I_copy,2)*100)),"%    of total width is removed"));
 
 
 
@@ -46,13 +44,13 @@ end
 
 figure,imshow(I);
 
-
+disp('Start Auto cropping');
 I = myAutoCrop(I,energy_map,6/7);
 figure,imshow(I);
-disp('Start Auto cropping');
+
 disp('%40    of total width is removed');
 
-
+disp('Start resizing');
 R = I(:,:,1);
 G = I(:,:,2);
 B = I(:,:,3);
@@ -61,8 +59,8 @@ G = imresize(G,[size(I,1) int16(round(size(I,2)*5/6))]);
 B = imresize(B,[size(I,1) int16(round(size(I,2)*5/6))]);
 I = cat(3,R,G,B);
 figure,imshow(I);
-imwrite(I,strcat(image_name,".png"));
-disp('Start resizing');
+%imwrite(I,strcat(image_name,".png"));
+
 disp('%50    of total width is removed');
 
 %functions
