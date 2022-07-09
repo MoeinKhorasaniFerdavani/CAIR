@@ -1,7 +1,7 @@
 
 clc;
 close all;
-image_name = "Diana";
+image_name = "Snowman";
 I = im2double(imread(strcat("Images\",image_name,".png")));
 
 figure,imshow(I);
@@ -34,7 +34,7 @@ J = removeVerticalSeam(J,seam,1);
 energy_map = removeVerticalSeam(energy_map,seam,1.15);
     
 I = removeVerticalSeamTreeChannel(I,seam);
-
+if mod(round(n/size(I_copy,2)*100)
 imshow(K);
 
 disp(strcat(num2str(round(n/size(I_copy,2)*100)),"%    of total width is removed"));
@@ -44,11 +44,11 @@ disp(strcat(num2str(round(n/size(I_copy,2)*100)),"%    of total width is removed
 end
 
 figure,imshow(I);
-imwrite(I,strcat(image_name,'_SC.png'));
+
 disp('Start Auto cropping');
 I = myAutoCrop(I,energy_map,6/7);
 figure,imshow(I);
-imwrite(I,strcat(image_name,'_AutoCropping.png'));
+
 disp('%40    of total width is removed');
 
 disp('Start resizing');
@@ -61,7 +61,7 @@ B = imresize(B,[size(I,1) int16(round(size(I,2)*5/6))]);
 I = cat(3,R,G,B);
 figure,imshow(I);
 %imwrite(I,strcat(image_name,".png"));
-imwrite(I,strcat(image_name,'_resizing.png'));
+
 disp('%50    of total width is removed');
 
 %functions
