@@ -1,7 +1,7 @@
 
 clc;
 close all;
-image_name = "Diana";
+image_name = "Baby";
 I = im2double(imread(strcat("Images\",image_name,".png")));
 
 figure,imshow(I);
