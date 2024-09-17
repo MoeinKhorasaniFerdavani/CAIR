@@ -2,6 +2,7 @@
 Final Project of Computer Vision       Content aware image retargeting
 
 
+Reducing the width of images to 50% by preserving the most image information based on a combination of auto crop,resize,seam carving
 
 ![Baby](https://github.com/user-attachments/assets/b9600ce3-cad6-421b-93b2-b1f57d4b6d54)  ![Baby](https://github.com/user-attachments/assets/948d57dc-dffd-434d-9ccf-f46569a0a029)
 ![Snowman](https://github.com/user-attachments/assets/516f90a6-81dc-4902-880c-ff187111439b) ![Snowman](https://github.com/user-attachments/assets/8f63d953-24fa-4ba6-abe9-4ec19f63163b)
